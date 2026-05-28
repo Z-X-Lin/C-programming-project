@@ -1,1 +1,2 @@
-1 202605102007 5 晚饭 2 0 F 1778399601 1779004401 QQ号 20.00 西老三 无 1 1778399556
+1|Study|1|4|Library|wechat123|30.5|hello
+2|Basketball|2|10|Playground|666666|0|tonight

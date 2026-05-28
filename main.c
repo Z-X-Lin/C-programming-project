@@ -4,20 +4,21 @@
 #include "join.h"
 
 void userMenu(void) {
-    int choice;
+    char choice;
     while (1) {
         clear();
         printf("===== 校园搭子系统 =====\n");
         printf("当前登录：%s (%s)\n", currentUser.name, currentUser.ID);
         printf("1. 发布搭子\n");
         printf("2. 查看所有搭子\n");
-        printf("3. 分类浏览\n");
-        printf("4. 申请搭子\n");
-        printf("5. 我的申请\n");
-        printf("6. 取消申请\n");
-        printf("7. 处理申请\n");
-        printf("8. 批量处理\n");
-        printf("9. 我发布的搭子\n");
+        printf("3. 搜索搭子\n");
+        printf("4. 分类浏览\n");
+        printf("5. 申请搭子\n");
+        printf("6. 我的申请\n");
+        printf("7. 取消申请\n");
+        printf("8. 处理申请\n");
+        printf("9. 批量处理\n");
+        printf("10. 我发布的搭子\n");
         printf("------------------\n");
         printf("a. 个人信息\n");
         printf("b. 修改密码\n");
@@ -34,6 +35,9 @@ void userMenu(void) {
                 postListAll();
                 break;
             case '3':
+                searchPost();
+                break;
+            case '4':
                 {
                     clear();
                     printf("===== 分类浏览 =====\n");
@@ -55,23 +59,23 @@ void userMenu(void) {
                     }
                 }
                 break;
-            case '4':
-                MyApply();
-                break;
             case '5':
-                MyList();
+                joinApply();
                 break;
             case '6':
-                CancelApplication();
+                joinMyList();
                 break;
             case '7':
-                HandleApplications();
+                joinCancelApplication();
                 break;
             case '8':
-                BatchHandle();
+                joinHandleApplications();
                 break;
             case '9':
-                ViewMyPublishedPosts();
+                joinBatchHandle();
+                break;
+            case '10':
+                joinMyPublishedPosts();
                 break;
             case 'a':
             case 'A':

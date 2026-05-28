@@ -56,22 +56,22 @@ void userMenu(void) {
                 }
                 break;
             case '4':
-                joinApply();
+                MyApply();
                 break;
             case '5':
-                joinMyList();
+                MyList();
                 break;
             case '6':
-                joinCancelApplication();
+                CancelApplication();
                 break;
             case '7':
-                joinHandleApplications();
+                HandleApplications();
                 break;
             case '8':
-                joinBatchHandle();
+                BatchHandle();
                 break;
             case '9':
-                joinMyPublishedPosts();
+                ViewMyPublishedPosts();
                 break;
             case 'a':
             case 'A':

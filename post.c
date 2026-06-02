@@ -4,22 +4,23 @@ post posts[MAX_POSTS];
 int postCount = 0;//帖子数组和计数器
 int nextPostId = 1;//下一个帖子ID
 
-char* getTypeName(int type){
-    switch(type){
-        case 1:return "Carpool";
-        case 2:return "Group Buy";
-        case 3:return "Study";
-        case 4:return "Sports";
-        case 5:return "Meal";
-        case 6:return "Travel";
-        default:return "Other";
-    }
+char* getTypeName(int type){ 
+    switch(type){ 
+        case 1:return "Carpool"; 
+        case 2:return "Group Buy"; 
+        case 3:return "Study"; 
+        case 4:return "Sports"; 
+        case 5:return "Meal"; 
+        case 6:return "Travel"; 
+        case 7:return "Other"; 
+        default:return "Unknown"; 
+    } 
 }
 
 void sortPosts(void){
     for(int i = 0; i < postCount - 1; i++){
         for(int j = 0; j < postCount - i - 1; j++){
-            if(posts[j].postId < posts[j + 1].postId){
+            if(posts[j].publishtime < posts[j + 1].publishtime){
                 post temp = posts[j];
                 posts[j] = posts[j + 1];
                 posts[j + 1] = temp;
@@ -40,18 +41,28 @@ void loadPosts(void){
 
     printf("File Open Success!\n");
     
-    while(fscanf(fp,"%d|%[^|]|%d|%d|%[^|]|%[^|]|%lf|%[^\n]\n", //%[^|\n]表示读取直到遇到|或换行的字符串停止
+    while(fscanf(fp,"%d|%[^|]|%d|%d|%d|%[^|]|%[^|]|%lf|%[^|]|%lld\n", //%[^|\n]表示读取直到遇到|或换行的字符串停止
            &posts[postCount].postId,
            posts[postCount].title,
+           &posts[postCount].type,
            &posts[postCount].current_number,
            &posts[postCount].max_number,
            posts[postCount].location,
            posts[postCount].contact,
            &posts[postCount].budget,
-           posts[postCount].remark) == 8)
+           posts[postCount].remark,
+           &posts[postCount].publishtime) == 10)
     {
         printf("Load One Post\n");
+        
+        if(posts[postCount].current_number >= posts[postCount].max_number){
+            posts[postCount].status = STATUS_FULL;
+        }else{
+            posts[postCount].status = STATUS_ACTIVE;
+        }
+        
         postCount++;
+        
         if(posts[postCount - 1].postId >= nextPostId){
             nextPostId = posts[postCount - 1].postId + 1;
         }
@@ -60,8 +71,8 @@ void loadPosts(void){
     for(int i = 0; i < postCount; i++){
         printf("ID:%d\n", posts[i].postId);
         printf("title:%s\n", posts[i].title);
-        printf("Current Number:%d\n", posts[i].current_number);
-        printf("Max Number:%d\n", posts[i].max_number);
+        printf("Type:%s\n", getTypeName(posts[i].type));
+        printf("Member: %d/%d\n", posts[i].current_number, posts[i].max_number);
         printf("Location:%s\n", posts[i].location);
         printf("Contact:%s\n", posts[i].contact);
         printf("Budget:%.2f\n", posts[i].budget);
@@ -73,17 +84,11 @@ void loadPosts(void){
 
 void postAdd(void){
     post newPost;
+    newPost.publishtime = time(NULL);//记录当前时间为发布时间
     newPost.current_number =1;//初始当前人数为1
     
-    if(newPost.current_number >= newPost.max_number){
-        newPost.status = STATUS_FULL;
-    }else{
-        newPost.status = STATUS_ACTIVE;
-    }
+    newPost.postId = nextPostId++;//把当前编号给新帖子
     
-    newPost.postId = nextPostId;//把当前编号给新帖子
-    nextPostId++;
-
     printf("Input title: ");
     scanf("%s", newPost.title);
 
@@ -92,6 +97,12 @@ void postAdd(void){
 
     printf("Input max number: ");
     scanf("%d", &newPost.max_number);
+
+    if(newPost.current_number >= newPost.max_number){
+        newPost.status = STATUS_FULL;
+    }else{
+        newPost.status = STATUS_ACTIVE;
+    }
 
     printf("Input location:");
     scanf("%s", newPost.location);
@@ -108,8 +119,7 @@ void postAdd(void){
     printf("Post ID:%d\n", newPost.postId);
     printf("Title: %s\n", newPost.title);
     printf("Type: %s\n", getTypeName(newPost.type));
-    printf("Current Number: %d\n", newPost.current_number);
-    printf("Max Number: %d\n", newPost.max_number);
+    printf("Member: %d/%d\n", newPost.current_number, newPost.max_number);
     printf("Location: %s\n", newPost.location);
     printf("Contact: %s\n", newPost.contact);
     printf("Budget: %.2f\n", newPost.budget);
@@ -119,6 +129,7 @@ void postAdd(void){
 
     savePosts();//保存到文件
 
+    printf("Post added successfully!\n");
     printf("Current Post Count: %d\n", postCount);
 }
 
@@ -133,31 +144,42 @@ void savePosts(void){
     printf("post.txt opened successfully!\n");
 
     for(int i = 0;i < postCount;i++){
-        fprintf(fp,"%d|%s|%d|%d|%s|%s|%.2lf|%s\n",
+        fprintf(fp,"%d|%s|%d|%d|%d|%s|%s|%.2lf|%s|%lld\n",
             posts[i].postId,
             posts[i].title,
+            posts[i].type,
             posts[i].current_number,
             posts[i].max_number,
             posts[i].location,
             posts[i].contact,
             posts[i].budget,
-            posts[i].remark);
+            posts[i].remark,
+            (long long)posts[i].publishtime);
     }
     
     fclose(fp);
 }
 
 void displayPost(post *p){
-        printf("\n");
-        printf("Post ID:%d\n", p->postId);
-        printf("Title:%s\n", p->title);
-        printf("Type:%s\n", getTypeName(p->type));
-        printf("Current Number:%d/%d\n", p->current_number, p->max_number);
-        printf("Location:%s\n", p->location);
-        printf("Contact:%s\n", p->contact);
-        printf("Budget:%.2f\n", p->budget);
-        printf("Remark:%s\n", p->remark);
-        printf("------------------------------\n");
+    char timeStr[100];
+    strftime(
+        timeStr, sizeof(timeStr), 
+        "%Y-%m-%d %H:%M:%S", 
+        localtime(&p->publishtime)
+    );
+
+    printf("\n");
+    printf("Post ID:%d\n", p->postId);
+    printf("Title:%s\n", p->title);
+    printf("Type:%s\n", getTypeName(p->type));
+    printf("Current Number:%d/%d\n", p->current_number, p->max_number);
+    printf("Status:%s\n", getStatusName(p->status));
+    printf("Location:%s\n", p->location);
+    printf("Contact:%s\n", p->contact);
+    printf("Budget:%.2f\n", p->budget);
+    printf("Remark:%s\n", p->remark);
+    printf("Publish Time:%s\n", timeStr);
+    printf("------------------------------\n");
     
 }
 
@@ -174,16 +196,31 @@ post* getPostById(int id){
             return &posts[i];//返回指向该帖子的指针
         }
     }
-    return NULL;
+    return NULL;//没找到Id返回NULL
+}
+
+void updatePostStatus(post *p){
+    if(p == NULL){
+        return;
+    }
+
+    if(p -> current_number >= p -> max_number){
+        p -> status = STATUS_FULL;
+    }else{
+        p -> status = STATUS_ACTIVE;
+    }//更新状态
 }
 
 void updatePost(post *p){
-    savePosts();
-    
-    p -> current_number++;
-    if(p -> current_number >= p -> max_number){
-        p -> status = STATUS_FULL;
+    if(p == NULL){
+        return;
     }
+
+    p -> current_number++;//增加当前人数
+
+    updatePostStatus(p);//更新状态
+
+    savePosts();
 }
 
 void searchPost(void){
@@ -199,3 +236,37 @@ void searchPost(void){
 
     displayPost(p);
 }
+
+void postListByType(int type){
+    sortPosts();
+    
+    int found = 0;
+
+    printf("\n==== %s ====\n", getTypeName(type));
+    
+    for(int i = 0; i < postCount; i++){
+        if(posts[i].type == type){
+            displayPost(&posts[i]);
+            found = 1;
+        }
+    }
+    if(!found){
+        printf("No posts of this type found!\n");
+    }
+}
+
+char* getStatusName(poststatus status){
+    switch(status){
+        case STATUS_ACTIVE:
+            return "Active";
+        case STATUS_FULL:
+            return "Full";
+        case STATUS_EXPIRED:
+            return "Expired";
+        case STATUS_HIDDEN:
+            return "Hidden";
+        default:
+            return "Unknown";
+    }
+}
+

@@ -1,2 +1,1 @@
-1|Study|1|4|Library|wechat123|30.5|hello
-2|Basketball|2|10|Playground|666666|0|tonight
+1|test_active|3|2|5|room|wx|0.00|test|1780412162

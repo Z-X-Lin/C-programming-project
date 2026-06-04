@@ -54,9 +54,9 @@ typedef struct {
     char genderlimit;      // 性别要求
     time_t start_time;     // 开始时间,time_t记录
     time_t end_time;       // 截止时间
+    char location[max_location]; // 地点
     char contact[max_contact]; // 联系方式
     double budget;         // 预算
-    char location[max_location]; // 地点
     char remark[max_remark];     // 发布者备注
     poststatus status;     // 帖子状态
     time_t publishtime;    // 帖子发布时间

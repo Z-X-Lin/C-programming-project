@@ -5,6 +5,7 @@ user users[MAX_USERS];
 int userCount = 0;
 post posts[MAX_POSTS];
 int postCount = 0;
+int nextPostId = 1;
 application applications[MAX_APPLICATIONS];
 int applicationCount = 0;
 // 清屏函数

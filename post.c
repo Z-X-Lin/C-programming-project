@@ -1,9 +1,5 @@
 #include "post.h"
 
-post posts[MAX_POSTS];
-int postCount = 0;//帖子数组和计数器
-int nextPostId = 1;//下一个帖子ID
-
 char* getTypeName(int type){ 
     switch(type){ 
         case 1:return "Carpool"; 
@@ -31,6 +27,7 @@ void sortPosts(void){
 
 void loadPosts(void){
     postCount = 0;
+    nextPostId = 1;
 
     FILE *fp = fopen("data/posts.txt","r");
     
@@ -43,6 +40,7 @@ void loadPosts(void){
     
     while(fscanf(fp,"%d|%[^|]|%d|%d|%d|%[^|]|%[^|]|%lf|%[^|]|%lld\n", //%[^|\n]表示读取直到遇到|或换行的字符串停止
            &posts[postCount].postId,
+           &posts[postCount].type,
            posts[postCount].title,
            &posts[postCount].type,
            &posts[postCount].current_number,
@@ -86,6 +84,8 @@ void postAdd(void){
     post newPost;
     newPost.publishtime = time(NULL);//记录当前时间为发布时间
     newPost.current_number =1;//初始当前人数为1
+
+    strcpy(newPost.publisherId, currentUser.ID);//把当前用户ID作为发布者ID
     
     newPost.postId = nextPostId++;//把当前编号给新帖子
     
@@ -170,6 +170,7 @@ void displayPost(post *p){
 
     printf("\n");
     printf("Post ID:%d\n", p->postId);
+    printf("Publisher ID:%s\n", p->publisherId);
     printf("Title:%s\n", p->title);
     printf("Type:%s\n", getTypeName(p->type));
     printf("Current Number:%d/%d\n", p->current_number, p->max_number);

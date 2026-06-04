@@ -18,12 +18,12 @@ void userMenu(void) {
         printf("7. 取消申请\n");
         printf("8. 处理申请\n");
         printf("9. 批量处理\n");
-        printf("10. 我发布的搭子\n");
+        printf("0. 我发布的搭子\n");
         printf("------------------\n");
         printf("a. 个人信息\n");
         printf("b. 修改密码\n");
         printf("c. 注销账号\n");
-        printf("0. 退出登录\n");
+        printf("d. 退出登录\n");
         printf("请选择：");
         scanf(" %c", &choice);
 
@@ -60,22 +60,22 @@ void userMenu(void) {
                 }
                 break;
             case '5':
-                joinApply();
+                MyApply();
                 break;
             case '6':
-                joinMyList();
+                MyList();
                 break;
             case '7':
-                joinCancelApplication();
+                CancelApplication();
                 break;
             case '8':
-                joinHandleApplications();
+                HandleApplications();
                 break;
             case '9':
-                joinBatchHandle();
+                BatchHandle();
                 break;
-            case '10':
-                joinMyPublishedPosts();
+            case '0':
+                ViewMyPublishedPosts();
                 break;
             case 'a':
             case 'A':
@@ -92,7 +92,8 @@ void userMenu(void) {
                     return;
                 }
                 break;
-            case '0':
+            case 'd':
+            case 'D':
                 memset(&currentUser, 0, sizeof(user));
                 printf("已退出登录\n");
                 pause();

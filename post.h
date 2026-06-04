@@ -3,6 +3,10 @@
 
 #include "common.h"
 
+extern post posts[MAX_POSTS];
+extern int postCount;
+extern int nextPostId;
+
 void postAdd(void);//发布帖子函数
 void postListAll(void);//显示所有帖子函数
 void postListByType(int type);//根据类型显示帖子函数

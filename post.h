@@ -20,6 +20,7 @@ void updatePostStatus(post *p);//更新帖子状态的函数ssss
 void displayPost(post *p);//显示单个帖子详情的函数
 void sortPosts(void);//排序帖子函数
 void searchPost(void);//搜索帖子函数
+void ViewMyPublishedPosts(void);//查看我发布的搭子函数
 
 #endif
 

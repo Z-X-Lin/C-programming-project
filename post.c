@@ -38,18 +38,22 @@ void loadPosts(void){
 
     printf("File Open Success!\n");
     
-    while(fscanf(fp,"%d|%[^|]|%d|%d|%d|%[^|]|%[^|]|%lf|%[^|]|%lld\n", //%[^|\n]表示读取直到遇到|或换行的字符串停止
+    while(fscanf(fp,"%d|%[^|]|%[^|]|%d|%d|%d|%c|%lld|%lld|%d|%[^|]|%[^|]|%lf|%[^|]|%lld\n", //%[^|\n]表示读取直到遇到|或换行的字符串停止
            &posts[postCount].postId,
-           &posts[postCount].type,
+           posts[postCount].publisherId,
            posts[postCount].title,
            &posts[postCount].type,
            &posts[postCount].current_number,
            &posts[postCount].max_number,
+           &posts[postCount].genderlimit,
+           &posts[postCount].start_time,
+           &posts[postCount].end_time,  
+           &posts[postCount].status, 
            posts[postCount].location,
            posts[postCount].contact,
            &posts[postCount].budget,
            posts[postCount].remark,
-           &posts[postCount].publishtime) == 10)
+           &posts[postCount].publishtime) == 15)
     {
         printf("Load One Post\n");
         
@@ -98,6 +102,16 @@ void postAdd(void){
     printf("Input max number: ");
     scanf("%d", &newPost.max_number);
 
+    printf("Gender limit (M/F/A): ");
+    scanf(" %c", &newPost.genderlimit);
+
+    printf("Input duration(days):");
+    int days;
+    scanf("%d", &days);
+
+    newPost.start_time = time(NULL);
+    newPost.end_time = newPost.start_time + days * 24 * 3600;//截止时间为开始时间加上持续天数
+
     if(newPost.current_number >= newPost.max_number){
         newPost.status = STATUS_FULL;
     }else{
@@ -144,12 +158,17 @@ void savePosts(void){
     printf("post.txt opened successfully!\n");
 
     for(int i = 0;i < postCount;i++){
-        fprintf(fp,"%d|%s|%d|%d|%d|%s|%s|%.2lf|%s|%lld\n",
+        fprintf(fp,"%d|%s|%s|%d|%d|%d|%c|%lld|%lld|%d|%s|%s|%.2lf|%s|%lld\n",
             posts[i].postId,
+            posts[i].publisherId,
             posts[i].title,
             posts[i].type,
             posts[i].current_number,
             posts[i].max_number,
+            posts[i].genderlimit,
+            (long long)posts[i].start_time,
+            (long long)posts[i].end_time,
+            posts[i].status,
             posts[i].location,
             posts[i].contact,
             posts[i].budget,
@@ -168,13 +187,29 @@ void displayPost(post *p){
         localtime(&p->publishtime)
     );
 
+    char startStr[100];
+    char endStr[100];
+    strftime(
+        startStr, sizeof(startStr),
+        "%Y-%m-%d %H:%M:%S",
+        localtime(&p->start_time)
+    );
+    strftime(
+        endStr, sizeof(endStr),
+        "%Y-%m-%d %H:%M:%S",
+        localtime(&p->end_time)
+    );
+
     printf("\n");
     printf("Post ID:%d\n", p->postId);
     printf("Publisher ID:%s\n", p->publisherId);
     printf("Title:%s\n", p->title);
     printf("Type:%s\n", getTypeName(p->type));
     printf("Current Number:%d/%d\n", p->current_number, p->max_number);
+    printf("Gender Limit:%c\n", p->genderlimit);
     printf("Status:%s\n", getStatusName(p->status));
+    printf("Start Time:%s\n", startStr);
+    printf("End Time:%s\n", endStr);
     printf("Location:%s\n", p->location);
     printf("Contact:%s\n", p->contact);
     printf("Budget:%.2f\n", p->budget);
@@ -269,5 +304,23 @@ char* getStatusName(poststatus status){
         default:
             return "Unknown";
     }
+}
+
+void ViewMyPublishedPosts(void){
+    int found = 0;
+
+    printf("\n===== My Published Posts =====\n");
+    for(int i = 0; i < postCount; i++){
+        if(strcmp(posts[i].publisherId, currentUser.ID) == 0){
+            displayPost(&posts[i]);
+            found = 1;
+        }
+    }
+
+    if(!found){
+        printf("You have not published any posts.\n");
+    }
+
+    pause();
 }
 

@@ -1,5 +1,6 @@
 #define __USE_MINGW_ANSI_STDIO 1//强制使用c99/c11标准替代Windows原生输入输出以修复兼容性
-#include <stdarg.h>//可变参函数
+//可变参函数
+#include <stdarg.h>
 #ifndef COMMON_H
 #define COMMON_H
 #include <stdio.h>

@@ -1,5 +1,6 @@
 #include "join.h"
-#include "post.h"//包含头文件
+#include "post.h"
+//包含头文件
 #define APPLICATIONS_FILE "data/applications.txt"//简化路径名
 //加载
 void loadApplications(void) {
@@ -55,7 +56,7 @@ void MyApply(void) {
         pause();
         return;
     }
-    //判断是否为自己的
+    //判断是否为自己的帖子
     if (strcmp(p->publisherId, currentUser.ID) == 0) {
         printf("不能申请自己发布的搭子！\n");
         pause();
@@ -177,39 +178,6 @@ void CancelApplication(void) {
         printf("申请已取消！\n");
     } else if (choice != 0) {
         printf("无效的选择！\n");
-    }
-    pause();
-}
-//查看我发布的搭子
-void ViewMyPublishedPosts(void) {
-    clear();
-    printf("===== 我发布的搭子 =====\n");
-    int found = 0;
-    printf("%-5s %-10s %-15s %-8s %-10s\n",
-           "ID", "类型", "标题", "人数", "状态");
-    printf("------------------------------------------------\n");
-    for (int i = 0; i < postCount; i++) {
-        if (strcmp(posts[i].publisherId, currentUser.ID) == 0) {
-            found = 1;
-            char *typeName = getTypeName(posts[i].type);
-            char statusStr[20];
-            switch (posts[i].status) {
-                case STATUS_ACTIVE: strcpy(statusStr, "进行中"); break;
-                case STATUS_FULL: strcpy(statusStr, "已满员"); break;
-                case STATUS_EXPIRED: strcpy(statusStr, "已过期"); break;
-                default: strcpy(statusStr, "未知"); break;
-            }
-            printf("%-5d %-10s %-15s %d/%d    %-10s\n",
-                   posts[i].postId,
-                   typeName,
-                   posts[i].title,
-                   posts[i].current_number,
-                   posts[i].max_number,
-                   statusStr);
-        }
-    }
-    if (!found) {
-        printf("您还没有发布任何搭子\n");
     }
     pause();
 }

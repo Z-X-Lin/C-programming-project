@@ -2,13 +2,13 @@
 
 char* getTypeName(int type){ 
     switch(type){ 
-        case 1:return "Carpool"; 
-        case 2:return "Group Buy"; 
-        case 3:return "Study"; 
-        case 4:return "Sports"; 
-        case 5:return "Meal"; 
-        case 6:return "Travel"; 
-        case 7:return "Other"; 
+        case 1:return "拼车"; 
+        case 2:return "拼单"; 
+        case 3:return "学习搭子"; 
+        case 4:return "运动搭子"; 
+        case 5:return "吃饭搭子"; 
+        case 6:return "旅游搭子"; 
+        case 7:return "其他"; 
         default:return "Unknown"; 
     } 
 }
@@ -71,14 +71,14 @@ void loadPosts(void){
     }
     
     for(int i = 0; i < postCount; i++){
-        printf("ID:%d\n", posts[i].postId);
-        printf("title:%s\n", posts[i].title);
-        printf("Type:%s\n", getTypeName(posts[i].type));
-        printf("Member: %d/%d\n", posts[i].current_number, posts[i].max_number);
-        printf("Location:%s\n", posts[i].location);
-        printf("Contact:%s\n", posts[i].contact);
-        printf("Budget:%.2f\n", posts[i].budget);
-        printf("Remark:%s\n", posts[i].remark);
+        printf("帖子编号:%d\n", posts[i].postId);
+        printf("标题:%s\n", posts[i].title);
+        printf("类型:%s\n", getTypeName(posts[i].type));
+        printf("成员: %d/%d\n", posts[i].current_number, posts[i].max_number);
+        printf("位置:%s\n", posts[i].location);
+        printf("联系方式:%s\n", posts[i].contact);
+        printf("预算:%.2f\n", posts[i].budget);
+        printf("备注:%s\n", posts[i].remark);
     }
 
      fclose(fp);
@@ -93,19 +93,27 @@ void postAdd(void){
     
     newPost.postId = nextPostId++;//把当前编号给新帖子
     
-    printf("Input title: ");
+    printf("输入标题: ");
     scanf("%s", newPost.title);
 
-    printf("Input type(1-7): ");
+    printf("请选择搭子类型：\n");
+    printf("1. 拼车\n");
+    printf("2. 拼单\n");
+    printf("3. 学习搭子\n");
+    printf("4. 运动搭子\n");
+    printf("5. 吃饭搭子\n");
+    printf("6. 旅游搭子\n");
+    printf("7. 其他\n");
+    printf("输入类型(1-7): ");
     scanf("%d", &newPost.type);
 
-    printf("Input max number: ");
+    printf("输入最大人数: ");
     scanf("%d", &newPost.max_number);
 
-    printf("Gender limit (M/F/A): ");
+    printf("性别限制 (M/F/A): ");
     scanf(" %c", &newPost.genderlimit);
 
-    printf("Input duration(days):");
+    printf("输入持续时间(天):");
     int days;
     scanf("%d", &days);
 
@@ -118,26 +126,26 @@ void postAdd(void){
         newPost.status = STATUS_ACTIVE;
     }
 
-    printf("Input location:");
+    printf("输入位置:");
     scanf("%s", newPost.location);
 
-    printf("Input contact:");
+    printf("输入联系方式:");
     scanf("%s", newPost.contact);
 
-    printf("Input budget:");
+    printf("输入预算:");
     scanf("%lf", &newPost.budget);
 
-    printf("Input remark:");
+    printf("输入备注:");
     scanf("%s", newPost.remark);
 
-    printf("Post ID:%d\n", newPost.postId);
-    printf("Title: %s\n", newPost.title);
-    printf("Type: %s\n", getTypeName(newPost.type));
-    printf("Member: %d/%d\n", newPost.current_number, newPost.max_number);
-    printf("Location: %s\n", newPost.location);
-    printf("Contact: %s\n", newPost.contact);
-    printf("Budget: %.2f\n", newPost.budget);
-    printf("Remark: %s\n", newPost.remark);
+    printf("帖子编号:%d\n", newPost.postId);
+    printf("标题: %s\n", newPost.title);
+    printf("类型: %s\n", getTypeName(newPost.type));
+    printf("成员: %d/%d\n", newPost.current_number, newPost.max_number);
+    printf("位置: %s\n", newPost.location);
+    printf("联系方式: %s\n", newPost.contact);
+    printf("预算: %.2f\n", newPost.budget);
+    printf("备注: %s\n", newPost.remark);
     posts[postCount] = newPost;//把新帖子放到数组里
     postCount++;
 
@@ -201,20 +209,20 @@ void displayPost(post *p){
     );
 
     printf("\n");
-    printf("Post ID:%d\n", p->postId);
-    printf("Publisher ID:%s\n", p->publisherId);
-    printf("Title:%s\n", p->title);
-    printf("Type:%s\n", getTypeName(p->type));
-    printf("Current Number:%d/%d\n", p->current_number, p->max_number);
-    printf("Gender Limit:%c\n", p->genderlimit);
-    printf("Status:%s\n", getStatusName(p->status));
-    printf("Start Time:%s\n", startStr);
-    printf("End Time:%s\n", endStr);
-    printf("Location:%s\n", p->location);
-    printf("Contact:%s\n", p->contact);
-    printf("Budget:%.2f\n", p->budget);
-    printf("Remark:%s\n", p->remark);
-    printf("Publish Time:%s\n", timeStr);
+    printf("帖子编号:%d\n", p->postId);
+    printf("发布者ID:%s\n", p->publisherId);
+    printf("标题:%s\n", p->title);
+    printf("类型:%s\n", getTypeName(p->type));
+    printf("当前人数:%d/%d\n", p->current_number, p->max_number);
+    printf("性别限制:%c\n", p->genderlimit);
+    printf("状态:%s\n", getStatusName(p->status));
+    printf("开始时间:%s\n", startStr);
+    printf("结束时间:%s\n", endStr);
+    printf("位置:%s\n", p->location);
+    printf("联系方式:%s\n", p->contact);
+    printf("预算:%.2f\n", p->budget);
+    printf("备注:%s\n", p->remark);
+    printf("发布时间:%s\n", timeStr);
     printf("------------------------------\n");
     
 }
@@ -224,6 +232,8 @@ void postListAll(void){
     for(int i = 0;i < postCount;i++){
         displayPost(&posts[i]);
     }
+
+    pause();
 }
 
 post* getPostById(int id){
@@ -261,6 +271,7 @@ void updatePost(post *p){
 
 void searchPost(void){
     int id;
+    
     printf("Input Post ID:");
     scanf("%d", &id);
     post *p = getPostById(id);
@@ -271,6 +282,8 @@ void searchPost(void){
     }
 
     displayPost(p);
+
+    pause();
 }
 
 void postListByType(int type){
@@ -289,6 +302,8 @@ void postListByType(int type){
     if(!found){
         printf("No posts of this type found!\n");
     }
+
+    pause();
 }
 
 char* getStatusName(poststatus status){

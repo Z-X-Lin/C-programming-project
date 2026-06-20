@@ -32,6 +32,7 @@ void userMenu(void) {
                 postAdd();
                 break;
             case '2':
+                printf("===== 所有搭子 =====\n");
                 postListAll();
                 break;
             case '3':

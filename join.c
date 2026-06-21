@@ -45,7 +45,7 @@ void CreatMyApply(void) {
         }
     }
     //不能超出申请容量上限
-    if(applicationCount>MAX_APPLICATIONS){
+    if(applicationCount>=MAX_APPLICATIONS){
         printf("申请已达上限！\n");
         pause();
         return;
@@ -213,7 +213,7 @@ void CancelApplication(void){
     }
     pause();
 }
-//查看我发布的帖子
+/*//查看我发布的帖子
 void ViewMyPublishedPosts(void){
     clear();
     printf("======我发布的帖子======\n");
@@ -228,7 +228,7 @@ void ViewMyPublishedPosts(void){
         printf("您还没有发布任何帖子\n");
     }
     pause();
-}
+}*/
 //加载申请数据
 void loadApplications(void){
     //只读形式打开或创建新文件
@@ -237,9 +237,7 @@ void loadApplications(void){
         printf("申请文件不存在，将创建新文件\n");
         return;
     }
-    //初始申请数为零
     applicationCount=0;
-    //提交申请
     while(fscanf(fp,"%d %s %s %s %d %ld",
                   &applications[applicationCount].postId,
                   applications[applicationCount].applicantId,

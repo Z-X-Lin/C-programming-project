@@ -13,8 +13,8 @@ void userMenu(void) {
         printf("2. 查看所有搭子\n");
         printf("3. 搜索搭子\n");
         printf("4. 分类浏览\n");
-        printf("5. 申请搭子\n");
-        printf("6. 我的申请\n");
+        printf("5. 查看我发出的申请\n");
+        printf("6. 创建我的申请\n");
         printf("7. 取消申请\n");
         printf("8. 处理申请\n");
         printf("9. 批量处理\n");
@@ -61,10 +61,10 @@ void userMenu(void) {
                 }
                 break;
             case '5':
-                MyApply();
+                ViewMyApply();
                 break;
             case '6':
-                MyList();
+                CreatMyApply();
                 break;
             case '7':
                 CancelApplication();
@@ -77,7 +77,6 @@ void userMenu(void) {
                 break;
             case '0':
                 ViewMyPublishedPosts();
-                break;
             case 'a':
             case 'A':
                 userInfo();

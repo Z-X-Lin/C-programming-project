@@ -170,6 +170,97 @@ void HandleApplications(void){
     }
     pause();
 }
+//批量处理
+void BatchHandle(void){
+    clear();
+    printf("=====批量处理申请=====\n");
+    // 收集当前用户发布的所有帖子ID
+    int myPostIds[MAX_POSTS];
+    int myPostCount=0;
+    for(int i=0;i<postCount;i++){
+        if(strcmp(posts[i].publisherId,currentUser.ID)==0){
+            myPostIds[myPostCount++]=posts[i].postId;
+        }
+    }
+    if(myPostCount==0){
+        printf("您还没有发布任何帖子，无申请\n");
+        pause();
+        return;
+    }
+    // 收集所有待处理的申请
+    int myTotalApplications=0;
+    int applicationList[MAX_APPLICATIONS];
+    for(int j=0;j<myPostCount;j++){
+        int postId=myPostIds[j];
+        post *p=getPostById(postId);
+        printf("\n---帖子【%s】(ID:%d)的申请---\n",
+                p?p->title:"未知",postId);
+        for(int i=0;i<applicationCount;i++){
+            if(applications[i].postId==postId&&applications[i].approved==0){
+                myTotalApplications++;
+                applicationList[myTotalApplications-1]=i;
+                printf("  %d. 申请人:%s | 联系方式:%s | 备注:%s\n",
+                       myTotalApplications,
+                       applications[i].applicantId,
+                       applications[i].contact,
+                       applications[i].note);
+            }
+        }
+    }
+    if(myTotalApplications==0){
+        printf("暂无待处理的申请\n");
+        pause();
+        return;
+    }
+    printf("\n请输入要处理的申请序号(多个用逗号分隔，如1,2,3;输入0返回):");
+    char input[200];
+    scanf("%s",input);
+    if(input[0]=='0'&&strlen(input)==1){
+        return;
+    }
+    // 解析序号
+    int selected[MAX_APPLICATIONS];
+    int selectCount=0;
+    char *token=strtok(input,",");
+    while(token&&selectCount<MAX_APPLICATIONS){
+        int idx=atoi(token);
+        if(idx>0&&idx<=myTotalApplications){
+            selected[selectCount++]=idx;
+        }
+        token=strtok(NULL,",");
+    }
+    if(selectCount==0){
+        printf("无效的选择！\n");
+        pause();
+        return;
+    }
+    printf("选择处理结果(1:全部同意 2:全部拒绝):");
+    int approved;
+    scanf("%d",&approved);
+    if(approved==1||approved==2){
+        for(int k=0;k<selectCount;k++){
+            int realIdx=applicationList[selected[k]-1];
+            applications[realIdx].approved=approved;
+            if(approved==1){
+                post *p=getPostById(applications[realIdx].postId);
+                if(p){
+                    p->current_number++;
+                    if(p->current_number>=p->max_number){
+                        p->status=STATUS_FULL;
+                    }
+                }
+            }
+        }
+        if(approved==1){
+            savePosts();
+        }
+        saveApplications();
+        printf("成功批量处理%d条申请！\n",selectCount);
+    }else{
+        printf("无效选择！\n");
+    }
+    pause();
+}
 //取消我发出的申请
 void CancelApplication(void){
     clear();

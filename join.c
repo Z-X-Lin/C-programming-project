@@ -69,7 +69,7 @@ void CreatMyApply(void) {
     printf("申请成功！等待发布者审核\n");
     pause();
 }
-//查看我发出的的申请
+//我的申请
 void ViewMyApply(void){
     clear();
     printf("=====我的申请=====\n");
@@ -99,7 +99,7 @@ void ViewMyApply(void){
     }
     pause();
 }
-//处理我得到的申请
+//处理申请
 void HandleApplications(void){
     clear();
     printf("===== 处理申请 =====\n");
@@ -261,7 +261,7 @@ void BatchHandle(void){
     }
     pause();
 }
-//取消我发出的申请
+//取消申请
 void CancelApplication(void){
     clear();
     printf("=====取消申请=====\n");
@@ -300,7 +300,7 @@ void CancelApplication(void){
     }
     pause();
 }
-//加载申请数据
+//加载申请
 void loadApplications(void){
     //只读形式打开或创建新文件
     FILE *fp=fopen(APPLICATIONS_FILE,"r");
@@ -323,7 +323,7 @@ void loadApplications(void){
     fclose(fp);
     printf("已加载%d条申请记录\n",applicationCount);
 }
-//保存申请数据
+//保存数据
 void saveApplications(void){
     //以只写形式打开
     FILE *fp=fopen(APPLICATIONS_FILE,"w");

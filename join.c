@@ -1,16 +1,16 @@
 //包含头文件
 #include"join.h"
 #include"post.h"
-//简化路径名
+//简化路径名（问的AI）
 #define APPLICATIONS_FILE "data/applications.txt"
 //创建我的申请
 void CreatMyApply(void) {
     clear();
-    printf("=====申请搭子=====\n");//小黑窗简单图形
+    printf("=====申请搭子=====\n");//小黑窗的简单图形
     int postId;
-    printf("输入您的ID:");
+    printf("输入帖子ID:");
     scanf("%d",&postId);
-    //获取帖子
+    //通过ID获取帖子
     post *p=getPostById(postId);
     if(!p){
         printf("帖子不存在！\n");
@@ -23,7 +23,7 @@ void CreatMyApply(void) {
         pause();
         return;
     }
-    //判断状态
+    //判断帖子状态
     if(p->status!=STATUS_ACTIVE){
         printf("该帖子已不接受申请！\n");
         pause();
@@ -35,16 +35,17 @@ void CreatMyApply(void) {
         pause();
         return;
     }
-    //防止重复
+    //防止重复，已取消的不算
     for(int i=0;i<applicationCount;i++) {
         if(applications[i].postId==postId&&
-            strcmp(applications[i].applicantId,currentUser.ID)==0){
+            strcmp(applications[i].applicantId,currentUser.ID)==0&&
+            applications[i].approved==0){
             printf("您已申请过该帖子！\n");
             pause();
             return;
         }
     }
-    //不能超出申请容量上限
+    //不能超出规定的申请量上限
     if(applicationCount>=MAX_APPLICATIONS){
         printf("申请已达上限！\n");
         pause();
@@ -61,7 +62,7 @@ void CreatMyApply(void) {
     getchar();
     //stdin：从键盘读取输入
     fgets(newApply.note,sizeof(newApply.note),stdin);
-    //返回'\n',在note里的位置并替换为'\0',防止fgets读取'\n'
+    //返回'\n',在note里的位置并替换为'\0',防止fgets读取'\n'（不太会）
     newApply.note[strcspn(newApply.note,"\n")]=0;
     applications[applicationCount++]=newApply;
     saveApplications();
@@ -73,9 +74,6 @@ void ViewMyApply(void){
     clear();
     printf("=====我的申请=====\n");
     int found=0;
-    printf("%-8s %-15s %-12s %-20s %-10s\n",
-           "序号","帖子标题","联系方式","备注","状态");
-    printf("----------------------------------------------------------------\n");
     int displayIdx=0;
     for (int i=0; i<applicationCount;i++){
         if(strcmp(applications[i].applicantId,currentUser.ID)==0&&
@@ -88,12 +86,12 @@ void ViewMyApply(void){
             if(applications[i].approved==1) statusStr="已同意";
             else if(applications[i].approved==2) statusStr="已拒绝";
             else if(applications[i].approved==3) statusStr="已取消";
-            printf("%-8d %-15s %-12s %-20s %-10s\n",
-                   displayIdx,
-                   p?p->title:"未知",
-                   applications[i].contact,
-                   applications[i].note,
-                   statusStr);
+            printf("\n  [%d] 帖子: %s\n", displayIdx,
+                   p?p->title:"未知");
+            printf("      联系方式: %s\n", applications[i].contact);
+            printf("      备注: %s\n", applications[i].note);
+            printf("      状态: %s\n", statusStr);
+            printf("      ------------------------\n");
         }
     }
     if(!found){
@@ -127,11 +125,12 @@ void HandleApplications(void){
             if(applications[i].postId==postId&&applications[i].approved==0){
                 totalApps++;
                 appList[totalApps-1]=i;
-                printf("  序号:%d\n",totalApps);
-                printf("  申请人学号:%s\n",applications[i].applicantId);
-                printf("  联系方式:%s\n",applications[i].contact);
-                printf("  备注:%s\n",applications[i].note);
-                printf("  ------------------------\n");
+                printf("\n  [%d] 申请人学号: %s\n",
+                       totalApps,
+                       applications[i].applicantId);
+                printf("      联系方式: %s\n", applications[i].contact);
+                printf("      备注: %s\n", applications[i].note);
+                printf("      ------------------------\n");
             }
         }
     }
@@ -170,7 +169,7 @@ void HandleApplications(void){
     }
     pause();
 }
-//批量处理
+//批量处理（AI）
 void BatchHandle(void){
     clear();
     printf("=====批量处理申请=====\n");
@@ -199,11 +198,12 @@ void BatchHandle(void){
             if(applications[i].postId==postId&&applications[i].approved==0){
                 myTotalApplications++;
                 applicationList[myTotalApplications-1]=i;
-                printf("  %d. 申请人:%s | 联系方式:%s | 备注:%s\n",
+                printf("\n  [%d] 申请人学号: %s\n",
                        myTotalApplications,
-                       applications[i].applicantId,
-                       applications[i].contact,
-                       applications[i].note);
+                       applications[i].applicantId);
+                printf("      联系方式: %s\n", applications[i].contact);
+                printf("      备注: %s\n", applications[i].note);
+                printf("      ------------------------\n");
             }
         }
     }
@@ -279,17 +279,13 @@ void CancelApplication(void){
         pause();
         return;
     }
-    printf("%-8s %-15s %-20s %-10s\n",
-           "序号","帖子标题","备注","状态");
-    printf("------------------------------------------------\n");
     for(int j=0;j<displayCount;j++){
         int i=displayList[j];
         post *p=getPostById(applications[i].postId);
-        printf("%-8d %-15s %-20s %-10s\n",
-               j+1,
-               p?p->title:"未知",
-               applications[i].note,
-               "未处理");
+        printf("\n  [%d] 帖子: %s\n", j+1, p?p->title:"未知");
+        printf("      备注: %s\n", applications[i].note);
+        printf("      状态: 未处理\n");
+        printf("      ------------------------\n");
     }
     printf("\n请输入要取消的申请序号(0返回):");
     int choice;
@@ -304,22 +300,6 @@ void CancelApplication(void){
     }
     pause();
 }
-/*//查看我发布的帖子
-void ViewMyPublishedPosts(void){
-    clear();
-    printf("======我发布的帖子======\n");
-    int found=0;
-    for(int i=0;i<postCount;i++){
-        if(strcmp(posts[i].publisherId,currentUser.ID)==0){
-            displayPost(&posts[i]);
-            found=1;
-        }
-    }
-    if(!found){
-        printf("您还没有发布任何帖子\n");
-    }
-    pause();
-}*/
 //加载申请数据
 void loadApplications(void){
     //只读形式打开或创建新文件
@@ -345,7 +325,7 @@ void loadApplications(void){
 }
 //保存申请数据
 void saveApplications(void){
-    //只写形式
+    //以只写形式打开
     FILE *fp=fopen(APPLICATIONS_FILE,"w");
     if(!fp){
         printf("无法保存申请数据！\n");

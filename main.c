@@ -5,7 +5,7 @@
 
 void userMenu(void){
     char choice;
-    while (1){
+    while(1){
         clear();
         printf("===== 校园搭子系统 =====\n");
         printf("当前登录：%s (%s)\n",currentUser.name,currentUser.ID);

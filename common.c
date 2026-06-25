@@ -10,7 +10,7 @@ int userCount=0;
 post posts[MAX_POSTS];
 //初始化当前帖子数量为0
 int postCount=0;
-//发帖者ID
+//帖子ID,序号每次自动加一
 int nextPostId=1;
 //申请结构体
 application applications[MAX_APPLICATIONS];

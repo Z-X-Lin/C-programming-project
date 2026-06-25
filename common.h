@@ -1,7 +1,6 @@
 //强制使用c99/c11标准替代Windows原生输入输出以修复兼容性（AI）
 #define __USE_MINGW_ANSI_STDIO 1
 //可变参函数
-#include <stdarg.h>
 #ifndef COMMON_H
 #define COMMON_H
 #include <stdio.h>
@@ -16,7 +15,7 @@
 #define max_title 50
 #define max_location 100
 #define max_contact 30//联系方式
-#define max_remark 200//简洁备注
+#define max_remark 100//简洁备注
 #define ex_max_remark 200//详细备注
 //最大容量定义
 #define MAX_USERS 100
@@ -80,6 +79,7 @@ extern post posts[MAX_POSTS];//所有帖子信息
 extern int postCount;//记录帖子数量
 extern application applications[MAX_APPLICATIONS];//所有申请
 extern int applicationCount;//记录申请数量
+extern int nextPostId;//帖子ID
 // 公共函数声明
 void clear(void);//清屏
 void pause(void);//暂停

@@ -1,10 +1,10 @@
 //包含头文件
 #include"join.h"
 #include"post.h"
-//简化路径名（问的AI）
+//简化路径名
 #define APPLICATIONS_FILE "data/applications.txt"
 //创建我的申请
-void CreatMyApply(void) {
+void CreatMyApply(void){
     clear();
     printf("=====申请搭子=====\n");//小黑窗的简单图形
     int postId;
@@ -63,7 +63,8 @@ void CreatMyApply(void) {
     //stdin：从键盘读取输入
     fgets(newApply.note,sizeof(newApply.note),stdin);
     //返回'\n',在note里的位置并替换为'\0',防止fgets读取'\n'（不太会）
-    newApply.note[strcspn(newApply.note,"\n")]=0;
+    //newApply.note[strcspn(newApply.note,"\n")]=0;
+    newApply.note[strlen(newApply.note)-1]='\0';
     applications[applicationCount++]=newApply;
     saveApplications();
     printf("申请成功！等待发布者审核\n");
@@ -115,18 +116,18 @@ void HandleApplications(void){
         pause();
         return;
     }
-    int totalApps=0;
-    int appList[MAX_APPLICATIONS];
+    int totalApplys=0;
+    int applyList[MAX_APPLICATIONS];
     for(int j=0;j<myPostCount;j++){
         int postId=myPostIds[j];
         post *p=getPostById(postId);
         printf("\n---帖子【%s】(ID:%d)的申请---\n",p?p->title:"未知",postId);
         for(int i=0;i<applicationCount;i++){
             if(applications[i].postId==postId&&applications[i].approved==0){
-                totalApps++;
-                appList[totalApps-1]=i;
+                totalApplys++;
+                applyList[totalApplys-1]=i;
                 printf("\n  [%d] 申请人学号: %s\n",
-                       totalApps,
+                       totalApplys,
                        applications[i].applicantId);
                 printf("      联系方式: %s\n", applications[i].contact);
                 printf("      备注: %s\n", applications[i].note);
@@ -134,7 +135,7 @@ void HandleApplications(void){
             }
         }
     }
-    if(totalApps==0){
+    if(totalApplys==0){
         printf("暂无待处理的申请\n");
         pause();
         return;
@@ -142,12 +143,12 @@ void HandleApplications(void){
     printf("\n请输入要处理的申请序号 (0返回): ");
     int applyIdx;
     scanf("%d",&applyIdx);
-    if(applyIdx>0&&applyIdx<=totalApps){
+    if(applyIdx>0&&applyIdx<=totalApplys){
         printf("选择处理结果(1:同意 2:拒绝):");
         int approved;
         scanf("%d",&approved);
         if(approved==1||approved==2){
-            int realIdx=appList[applyIdx-1];
+            int realIdx=applyList[applyIdx-1];
             applications[realIdx].approved=approved;
             if(approved==1){
                 post *p=getPostById(applications[realIdx].postId);

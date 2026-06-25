@@ -134,40 +134,40 @@ void HandleApplications(void){
                 printf("      ------------------------\n");
             }
         }
-    }
-    if(totalApplys==0){
-        printf("暂无待处理的申请\n");
-        pause();
-        return;
-    }
-    printf("\n请输入要处理的申请序号 (0返回): ");
-    int applyIdx;
-    scanf("%d",&applyIdx);
-    if(applyIdx>0&&applyIdx<=totalApplys){
-        printf("选择处理结果(1:同意 2:拒绝):");
-        int approved;
-        scanf("%d",&approved);
-        if(approved==1||approved==2){
-            int realIdx=applyList[applyIdx-1];
-            applications[realIdx].approved=approved;
-            if(approved==1){
-                post *p=getPostById(applications[realIdx].postId);
-                if(p){
-                    p->current_number++;
-                    if(p->current_number>=p->max_number){
-                        p->status=STATUS_FULL;
-                    }
-                    savePosts();
-                }
-            }
-            saveApplications();
-            printf(approved==1?"已同意该申请！\n":"已拒绝该申请\n");
-        }else{
-            printf("无效选择！\n");
+        if(totalApplys==0){
+            printf("暂无待处理的申请\n");
+            pause();
+            return;
         }
-    }else if(applyIdx!=0){
-        printf("无效的申请序号！\n");
-    }
+        printf("\n请输入要处理的申请序号 (0返回): ");
+        int applyIdx;
+        scanf("%d",&applyIdx);
+        if(applyIdx>0&&applyIdx<=totalApplys){
+            printf("选择处理结果(1:同意 2:拒绝):");
+            int approved;
+            scanf("%d",&approved);
+            if(approved==1||approved==2){
+                int realIdx=applyList[applyIdx-1];
+                applications[realIdx].approved=approved;
+                if(approved==1){
+                    post *p=getPostById(applications[realIdx].postId);
+                    if(p){
+                        p->current_number++;
+                        if(p->current_number>=p->max_number){
+                            p->status=STATUS_FULL;
+                        }
+                        savePosts();
+                    }
+                }
+                saveApplications();
+                printf(approved==1?"已同意该申请！\n":"已拒绝该申请\n");
+            }else{
+                printf("无效选择！\n");
+            }
+        }else if(applyIdx!=0){
+            printf("无效的申请序号！\n");
+            }
+        }
     pause();
 }
 //批量处理（AI）

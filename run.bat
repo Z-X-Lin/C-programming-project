@@ -1,4 +1,4 @@
-//（AI）
+//(AI)
 @echo off
 chcp 65001 >nul
 //编译

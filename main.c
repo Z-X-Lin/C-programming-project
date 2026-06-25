@@ -1,33 +1,33 @@
-#include "common.h"
-#include "user.h"
-#include "post.h"
-#include "join.h"
+#include"common.h"
+#include"user.h"
+#include"post.h"
+#include"join.h"
 
-void userMenu(void) {
+void userMenu(void){
     char choice;
-    while (1) {
+    while(1){
         clear();
         printf("===== 校园搭子系统 =====\n");
-        printf("当前登录：%s (%s)\n", currentUser.name, currentUser.ID);
-        printf("1. 发布搭子\n");
-        printf("2. 查看所有搭子\n");
-        printf("3. 搜索搭子\n");
+        printf("当前登录：%s (%s)\n",currentUser.name,currentUser.ID);
+        printf("1. 发布帖子\n");
+        printf("2. 所有帖子\n");
+        printf("3. 搜索帖子\n");
         printf("4. 分类浏览\n");
-        printf("5. 申请搭子\n");
-        printf("6. 我的申请\n");
+        printf("5. 我的申请\n");
+        printf("6. 创建申请\n");
         printf("7. 取消申请\n");
         printf("8. 处理申请\n");
         printf("9. 批量处理\n");
-        printf("0. 我发布的搭子\n");
+        printf("0. 我的帖子\n");
         printf("------------------\n");
         printf("a. 个人信息\n");
         printf("b. 修改密码\n");
         printf("c. 注销账号\n");
         printf("d. 退出登录\n");
         printf("请选择：");
-        scanf(" %c", &choice);
+        scanf("%c",&choice);
 
-        switch (choice) {
+        switch(choice){
             case '1':
                 postAdd();
                 break;
@@ -51,20 +51,20 @@ void userMenu(void) {
                     printf("7. 其他\n");
                     printf("请选择类型：");
                     int type;
-                    scanf("%d", &type);
-                    if (type >= 1 && type <= 7) {
+                    scanf("%d",&type);
+                    if(type>=1&&type<=7){
                         postListByType(type);
-                    } else {
+                    }else{
                         printf("无效选择！\n");
                         pause();
                     }
                 }
                 break;
             case '5':
-                MyApply();
+                ViewMyApply();
                 break;
             case '6':
-                MyList();
+                CreatMyApply();
                 break;
             case '7':
                 CancelApplication();
@@ -77,7 +77,6 @@ void userMenu(void) {
                 break;
             case '0':
                 ViewMyPublishedPosts();
-                break;
             case 'a':
             case 'A':
                 userInfo();
@@ -89,13 +88,13 @@ void userMenu(void) {
             case 'c':
             case 'C':
                 userDelete();
-                if (currentUser.ID[0] == '\0') {
+                if(currentUser.ID[0]=='\0') {
                     return;
                 }
                 break;
             case 'd':
             case 'D':
-                memset(&currentUser, 0, sizeof(user));
+                memset(&currentUser,0,sizeof(user));
                 printf("已退出登录\n");
                 pause();
                 return;
@@ -106,7 +105,7 @@ void userMenu(void) {
     }
 }
 
-int main(void) {
+int main(void){
     int choice;
 
     loadUsers();
@@ -120,14 +119,14 @@ int main(void) {
         printf("2. 登录\n");
         printf("0. 退出\n");
         printf("请选择：");
-        scanf("%d", &choice);
+        scanf("%d",&choice);
 
-        switch (choice) {
+        switch(choice){
             case 1:
                 userRegister();
                 break;
             case 2:
-                if (userLogin()) {
+                if(userLogin()){
                     userMenu();
                 }
                 break;

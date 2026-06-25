@@ -324,7 +324,7 @@ char* getStatusName(poststatus status){
 void ViewMyPublishedPosts(void){
     int found = 0;
 
-    printf("\n===== My Published Posts =====\n");
+    printf("\n===== 我发布的帖子 =====\n");
     for(int i = 0; i < postCount; i++){
         if(strcmp(posts[i].publisherId, currentUser.ID) == 0){
             displayPost(&posts[i]);
